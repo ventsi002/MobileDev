@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { firebase } from './config'
 
 const Stack = createStackNavigator();
+
 
 function HomeScreen({ navigation, route }) {
   const [notes, setNotes] = useState([]);
@@ -37,6 +39,29 @@ function NoteScreen({ navigation, route }) {
   const { note, notes, setNotes } = route.params;
   const [text, setText] = useState(note.text);
 
+  const todoRef = firebase.firestore().collection('Notes');
+  const [addNote, setAddNote] = useState('');
+
+
+  const addField = () => {
+    if (addNote && addNote.length > 0) {
+      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+      const note = {
+        heading: addNote,
+        createdAt: timestamp
+      };
+      todoRef
+        .add(note)
+        .then(() => {
+          setAddNote('');
+          Keyboard.dismiss();
+        })
+        .catch((error) => {
+          alert(error);
+        })
+    }
+  }
+
   function SaveNote() {
     const newNotes = notes.map((n) => {
       if (n.id === note.id) {
@@ -57,9 +82,9 @@ function NoteScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.noteInput} value={text} onChangeText={setText} />
+      <TextInput style={styles.noteInput} value={addNote} onChangeText={(heading) => setAddNote(heading)} />
       <View style={styles.buttonContainer}>
-        <Button title="Save" onPress={SaveNote} />
+        <Button title="Save" onPress={addField} />
         <Button title="Delete" onPress={DeleteNote} color="red" />
       </View>
     </View>
