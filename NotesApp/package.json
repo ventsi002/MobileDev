@@ -16,13 +16,10 @@
     "firebase": "^9.17.1",
     "react": "18.1.0",
     "react-native": "0.70.5",
-<<<<<<< HEAD
     "uuid": "^9.0.0",
     "expo-image-picker": "~14.0.2",
     "react-native-maps": "1.3.2"
-=======
     "uuid": "^9.0.0"
->>>>>>> 0aab11606f94ec4b65e9efc46628bc1d6f022d44
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
